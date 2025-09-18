@@ -17,16 +17,21 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-f@9-u&fo)1ax()0-39_0b-0um^ow489*1f-vnerbk(sxy(2g)7'
-
+MONGO_URI = os.environ.get("MONGO_URI")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "migrant-care-backend.onrender.com",
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -64,7 +69,9 @@ REST_FRAMEWORK = {
 # settings.py
 INSTALLED_APPS += ['corsheaders']
 MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
-CORS_ALLOW_ALL_ORIGINS = True  # For dev only
+CORS_ALLOWED_ORIGINS = [
+    "https://migrant-care-frontend.vercel.app",
+]  # For dev only
 
 TEMPLATES = [
     {
