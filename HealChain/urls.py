@@ -32,6 +32,10 @@ from HealthBridge.views import (
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
+from django.urls import path
+from .views import CustomLoginView
+
+
 
 # 🔹 Register viewsets with the router
 router = DefaultRouter()
@@ -55,6 +59,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), 
     path('', include('HealthBridge.urls')),
+    path('api/login/', CustomLoginView.as_view(), name='custom-login'),
+
 ]
 from django.contrib import admin
 from django.urls import path, include
