@@ -1,22 +1,15 @@
 """
 URL configuration for HealChain project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
+from HealthBridge.views import ai_symptom_recommendations
+
+
 from HealthBridge.views import (
     ProfileViewSet,
     MedicalRecordViewSet,
@@ -27,15 +20,9 @@ from HealthBridge.views import (
     get_patient_by_qr,
     hospital_dashboard,
     outbreak_summary,
-    user_dashboard
+    user_dashboard,
+    CustomLoginView,
 )
-from django.conf.urls.static import static
-from django.conf import settings
-from django.urls import path, include
-from django.urls import path
-from .views import CustomLoginView
-
-
 
 # 🔹 Register viewsets with the router
 router = DefaultRouter()
@@ -46,7 +33,10 @@ router.register(r'recommendations', RecommendationViewSet)
 
 # 🔹 Define URL patterns
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
+
+    # API routes from DRF router
     path('', include(router.urls)),
 
     # Custom APIs
@@ -56,13 +46,17 @@ urlpatterns = [
     path('hospital-dashboard/<str:hospital_name>/', hospital_dashboard, name='hospital-dashboard'),
     path('outbreak-summary/', outbreak_summary, name='outbreak-summary'),
     path('user-dashboard/<int:user_id>/', user_dashboard, name='user-dashboard'),
-    path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')), 
-    path('', include('HealthBridge.urls')),
+
+    # Authentication
+    path('accounts/', include('django.contrib.auth.urls')),
     path('api/login/', CustomLoginView.as_view(), name='custom-login'),
 
+    # Include HealthBridge app urls (if you have extra routes defined there)
+    path('', include('HealthBridge.urls')),
+    path('api/ai-recommendations/', ai_symptom_recommendations, name='ai-recommendations'),
 ]
-from django.contrib import admin
-from django.urls import path, include
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# 🔹 Serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -1,12 +1,8 @@
+# HealthBridge/urls.py - CLEAN VERSION
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from HealthBridge.views import get_full_patient_info_by_qr
-from django.urls import path
-from .views import authority_dashboard_metrics
-from django.urls import path
-from .views import get_patient_vitals
-from .views import CustomLoginView
-
+from HealthBridge.views import ai_symptom_recommendations
+from HealthBridge.views import my_profile
 
 from .views import (
     home,
@@ -22,7 +18,13 @@ from .views import (
     user_dashboard,
     migrant_dashboard_data,
     doctor_dashboard_data,
-    authority_dashboard_data
+    authority_dashboard_data,
+    CustomLoginView,
+    QRLookupView,
+    get_full_patient_info_by_qr,
+    authority_dashboard_metrics,
+    get_patient_vitals,
+    qr_scan_page,
 )
 
 router = DefaultRouter()
@@ -41,16 +43,15 @@ urlpatterns = [
     path('api/outbreak-summary/', outbreak_summary),
     path('api/dashboard/<int:user_id>/', user_dashboard),
     path('api/login/', CustomLoginView.as_view(), name='custom_login'),
-
-    
-    path('api/patient-full-info/<uuid:qr_uuid>/', get_full_patient_info_by_qr, name='patient-full-info'),
+    path('api/patient-full-info/<uuid:qr_uuid>/', get_full_patient_info_by_qr),
     path('api/migrant/dashboard/', migrant_dashboard_data),
     path('api/doctor/dashboard/', doctor_dashboard_data),
     path('api/authority/dashboard/', authority_dashboard_data),
     path('get_patient_vitals/<uuid:uuid>/', get_patient_vitals),
     path('authority_dashboard_metrics/', authority_dashboard_metrics),
+    path('scan/', qr_scan_page, name='qr-scan'),
+    path('api/qr-lookup/', QRLookupView.as_view(), name='qr-lookup'),
+    path('api/ai-recommendations/', ai_symptom_recommendations, name='ai-recommendations'),
+    path('api/my-profile/', my_profile, name='my-profile'),
 ]
 
-
-
-    
